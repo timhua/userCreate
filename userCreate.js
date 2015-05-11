@@ -1,3 +1,10 @@
+#!/bin/sh
+
+':' // Hack to pass parameters to Node before running this file
+':' //; [ -f ~/.pm2/custom_options.sh ] && . ~/.pm2/custom_options.sh || : ; exec "`command -v node || command -v nodejs`" $PM2_NODE_OPTIONS "$0" "$@"
+
+
+
 var pg = require('pg');
 var uuid = require('node-uuid');
 var promise = require('promise');
@@ -18,6 +25,10 @@ var hash = function (secret, nonce) {
 
 var dbExecute = function(query, dbConnection, callback){
   pg.connect(dbConnection, function(error, client, done){
+    if(client === null) { 
+      console.log("No PSQL server, exiting..");
+      process.exit(1);
+    }
     client.query(query, function(error, results){
       if(error){
         console.log("PSQL ERROR:", error);
@@ -73,8 +84,8 @@ if(!process.argv[2]){
         createUser(user, ++lastID);
       }
     });
+    console.log("UI webserver needs to be restarted before new accounts are accessible");
   });
-    console.log("done.. UI webserver needs to be restarted before new accounts are accessible");
 }
 
 
