@@ -55,8 +55,7 @@ if(!process.argv[2]){
                    .map(function(user){
                       return user.replace(/ /g,'').split(',');
                     });
-   console.log(newUsers);
-  if(newUsers[0][0][0] === '#') newUsers.shift();
+  // if(newUsers[0][0][0] === '#') newUsers.shift();
   if(newUsers[newUsers.length-1] <= 1) newUsers.pop();
   var currentUsers = {};
   dbExecute(getUsersQuery, connection, function(data){
@@ -68,6 +67,8 @@ if(!process.argv[2]){
     newUsers.forEach(function(user){
       if(currentUsers.hasOwnProperty(user[0])){
         console.log(user[0] + " already exists, skipping..");
+      } else if( user[0][0] === '#' ){
+        return;
       } else {
         createUser(user, ++lastID);
       }
