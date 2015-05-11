@@ -5,7 +5,7 @@ var path = require('path');
 var fs = require('fs');
 var crypto = require('crypto');
 var process = require('process');
-var connection = 'postgres://jolata@192.168.20.35:5432/jolata';
+var connection = 'postgres://jolata@127.0.0.1:5432/jolata';
 
 var getUsersQuery = 'select * from users';
 
@@ -14,10 +14,6 @@ var hash = function (secret, nonce) {
     var hash = crypto.createHash('sha1');
     hash.update(secret + nonce);
     return hash.digest('hex');
-};
-
-var checkHash = function(secret, nonce, _hash){
-  return createHash(secret, nonce) === _hash;
 };
 
 var dbExecute = function(query, dbConnection, callback){
@@ -73,10 +69,10 @@ if(!process.argv[2]){
       if(currentUsers.hasOwnProperty(user[0])){
         console.log(user[0] + " already exists, skipping..");
       } else {
-        console.log(user);
         createUser(user, ++lastID);
       }
     });
+    console.log("done.. UI webserver needs to be restarted before new accounts are accessible");
   });
 }
 
