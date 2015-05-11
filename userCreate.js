@@ -40,7 +40,7 @@ var createUser = function(user, lastID){
   var query = 'INSERT INTO users (' + column + ') VALUES (\'' + values.join('\',\'') +'\');';
   console.log(query);
   dbExecute(query, connection, function(results){
-    console.log(results);
+    console.log(user[0] + "account created..");
   });
 
 };
@@ -72,8 +72,8 @@ if(!process.argv[2]){
         createUser(user, ++lastID);
       }
     });
-    console.log("done.. UI webserver needs to be restarted before new accounts are accessible");
   });
+    console.log("done.. UI webserver needs to be restarted before new accounts are accessible");
 }
 
 
